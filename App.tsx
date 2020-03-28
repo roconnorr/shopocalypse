@@ -1,78 +1,100 @@
 import React, { ReactElement } from 'react';
-import { View, StyleSheet, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, FlatList, TouchableOpacity, ActionSheetIOS } from 'react-native';
 
 const SEED_DATA = {
   now: ['Pizza', 'Burger', 'Risotto', 'Cheese Cake', 'Ice Cream'],
   later: ['French Fries', 'Onion Rings', 'Fried Shrimps', 'Water', 'Coke', 'Beer'],
+  checkedOff: ['Cheese', 'Milk'],
 };
 
-type ListData = {
+type ItemLocationType = 'now' | 'later' | 'checked';
+
+type ListItemType = {
   key: string;
   name: string;
-  list: 'now' | 'later';
+  list: ItemLocationType;
   backgroundColor: string;
   disabledDrag?: boolean;
   disabledReSorted?: boolean;
 };
 
-const nowData: ListData[] = SEED_DATA.now.map((item, index) => ({
+const nowData: ListItemType[] = SEED_DATA.now.map((item, index) => ({
   name: item,
   key: item,
   list: 'now',
   backgroundColor: `rgb(${Math.floor(Math.random() * 255)}, ${index * 5}, ${132})`,
 }));
 
-const laterData: ListData[] = SEED_DATA.later.map((item, index) => ({
+const laterData: ListItemType[] = SEED_DATA.later.map((item, index) => ({
   name: item,
   key: item,
   list: 'later',
   backgroundColor: `rgb(${Math.floor(Math.random() * 255)}, ${index * 5}, ${132})`,
 }));
 
+const checkedOffData: ListItemType[] = SEED_DATA.checkedOff.map((item, index) => ({
+  name: item,
+  key: item,
+  list: 'checked',
+  backgroundColor: `rgb(${Math.floor(Math.random() * 255)}, ${index * 5}, ${132})`,
+}));
+
 interface State {
-  nowData: ListData[];
-  laterData: ListData[];
+  listItems: ListItemType[];
 }
 
 class App extends React.Component<{}, State> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      nowData,
-      laterData,
+      listItems: [...nowData, ...laterData, ...checkedOffData],
     };
   }
 
-  onPressItem = (item: ListData): void => {
-    if (item.list === 'now') {
-      const now = this.state.nowData;
+  moveItem = (item: ListItemType, destination: ItemLocationType): void => {
+    const listItems = this.state.listItems;
+    const itemIndex = this.state.listItems.findIndex((i) => i.name === item.name);
+    listItems.splice(itemIndex, 1);
 
-      const nowIndex = now.findIndex((i) => i.name === item.name);
-      now.splice(nowIndex, 1);
-
-      this.setState({
-        nowData: now,
-        laterData: [...this.state.laterData, { ...item, list: 'later' }],
-      });
-    } else if (item.list === 'later') {
-      const later = this.state.laterData;
-
-      const laterIndex = later.findIndex((i) => i.name === item.name);
-      later.splice(laterIndex, 1);
-
-      this.setState({
-        nowData: [...this.state.nowData, { ...item, list: 'now' }],
-        laterData: later,
-      });
-    }
+    this.setState({
+      listItems: [...listItems, { ...item, list: destination }],
+    });
   };
 
-  renderItem(item: ListData): ReactElement {
+  onPressItem = (item: ListItemType): void => {
+    const opts = ['Cancel', 'Now', 'Later', 'Checked'];
+
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: opts,
+        cancelButtonIndex: 0,
+      },
+      (buttonIndex) => {
+        switch (buttonIndex) {
+          case 1: {
+            this.moveItem(item, 'now');
+            break;
+          }
+          case 2: {
+            this.moveItem(item, 'later');
+            break;
+          }
+          case 3: {
+            this.moveItem(item, 'checked');
+            break;
+          }
+        }
+      }
+    );
+  };
+
+  renderItem(item: ListItemType): ReactElement {
     return (
       <TouchableOpacity
         style={[styles.item, { backgroundColor: item.backgroundColor }]}
         key={item.key}
-        onPress={(): void => this.onPressItem(item)}>
+        onPress={(): void => this.moveItem(item, 'checked')}
+        onLongPress={(): void => this.onPressItem(item)}>
         <Text style={styles.itemText}>{item.name}</Text>
       </TouchableOpacity>
     );
@@ -80,23 +102,36 @@ class App extends React.Component<{}, State> {
 
   render(): ReactElement {
     return (
-      <View style={{ flex: 1, paddingTop: 50 }}>
-        <Text>Now</Text>
+      <View
+        style={{
+          flex: 1,
+          paddingTop: 20,
+          paddingLeft: 5,
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+        }}>
+        <Text style={{ margin: 5 }}>Now</Text>
         <FlatList
-          data={this.state.nowData}
+          data={this.state.listItems.filter((item) => item.list === 'now')}
           renderItem={({ item }): ReactElement => this.renderItem(item)}
           scrollEnabled={false}
           numColumns={4}
-          style={{ width: '100%' }}
         />
 
-        <Text>Later</Text>
+        <Text style={{ margin: 5 }}>Later</Text>
         <FlatList
-          data={this.state.laterData}
+          data={this.state.listItems.filter((item) => item.list === 'later')}
           renderItem={({ item }): ReactElement => this.renderItem(item)}
           scrollEnabled={false}
           numColumns={4}
-          style={{ width: '100%' }}
+        />
+
+        <Text style={{ margin: 5 }}>Checked Off</Text>
+        <FlatList
+          data={this.state.listItems.filter((item) => item.list === 'checked')}
+          renderItem={({ item }): ReactElement => this.renderItem(item)}
+          scrollEnabled={false}
+          numColumns={4}
         />
       </View>
     );
@@ -104,21 +139,11 @@ class App extends React.Component<{}, State> {
 }
 
 const styles = StyleSheet.create({
-  MainContainer: {
-    justifyContent: 'center',
-    flex: 1,
-    paddingTop: 30,
-  },
-  button: {
-    width: 150,
-    height: 100,
-    backgroundColor: 'blue',
-  },
   item: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     borderRadius: 8,
-    backgroundColor: 'red',
+    margin: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },

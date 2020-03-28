@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, FlatList, TouchableOpacity, ActionSheetIOS, ImageStyle } from 'react-native';
-import Modal from 'react-native-modal';
 import {
   ApplicationProvider,
   Button,
@@ -8,10 +7,13 @@ import {
   IconRegistry,
   Text,
   Layout,
-  Input,
 } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { mapping, dark as theme } from '@eva-design/eva';
+import { Provider } from 'react-redux';
+import { store } from './src/store';
+
+import AddProductModal from './src/components/addProductModal/AddProductModal';
 
 const SEED_DATA = {
   now: ['Pizza', 'Burger', 'Risotto', 'Cheese Cake', 'Ice Cream'],
@@ -135,71 +137,41 @@ class App extends React.Component<{}, State> {
       <>
         <IconRegistry icons={EvaIconsPack} />
         <ApplicationProvider mapping={mapping} theme={theme}>
-          <Layout
-            style={{
-              flex: 1,
-              paddingTop: 20,
-              paddingLeft: 5,
-              justifyContent: 'center',
-              alignItems: 'flex-start',
-            }}>
-            <Text style={{ margin: 5 }}>Now</Text>
-            <FlatList
-              data={this.state.listItems.filter((item) => item.list === 'now')}
-              renderItem={({ item }): ReactElement => this.renderItem(item)}
-              scrollEnabled={false}
-              numColumns={4}
-            />
-
-            <Text style={{ margin: 5 }}>Later</Text>
-            <FlatList
-              data={this.state.listItems.filter((item) => item.list === 'later')}
-              renderItem={({ item }): ReactElement => this.renderItem(item)}
-              scrollEnabled={false}
-              numColumns={4}
-            />
-
-            <Text style={{ margin: 5 }}>Checked Off</Text>
-            <FlatList
-              data={this.state.listItems.filter((item) => item.list === 'checked')}
-              renderItem={({ item }): ReactElement => this.renderItem(item)}
-              scrollEnabled={false}
-              numColumns={4}
-            />
-          </Layout>
-          <Layout>
-            <Modal
-              isVisible={this.state.modalVisible}
-              onBackdropPress={(): void => this.setState({ modalVisible: false })}>
-              <Layout style={{ flex: 0.5 }}>
-                <Text category="h2" style={{ margin: 5 }}>
-                  Add Item
-                </Text>
-                <Input
-                  placeholder="Item Name"
-                  style={{ margin: 5 }}
-                  value={this.state.newProductName}
-                  onChangeText={(val): void => this.setState({ newProductName: val })}
-                />
-              </Layout>
-              <Button
-                onPress={(): void => {
-                  this.addItem(this.state.newProductName);
-                  this.setState({ newProductName: '', modalVisible: false });
-                }}
-                icon={(style: ImageStyle): ReactElement => (
-                  <Icon {...style} width={32} height={32} name="checkmark-square-2-outline" />
-                )}
+          <Provider store={store}>
+            <Layout
+              style={{
+                flex: 1,
+                paddingTop: 20,
+                paddingLeft: 5,
+                justifyContent: 'center',
+                alignItems: 'flex-start',
+              }}>
+              <Text style={{ margin: 5 }}>Now</Text>
+              <FlatList
+                data={this.state.listItems.filter((item) => item.list === 'now')}
+                renderItem={({ item }): ReactElement => this.renderItem(item)}
+                scrollEnabled={false}
+                numColumns={4}
               />
-            </Modal>
-          </Layout>
-          <Button
-            onPress={(): void => this.setState({ modalVisible: !this.state.modalVisible })}
-            style={styles.addButtonStyle}
-            icon={(style: ImageStyle): ReactElement => (
-              <Icon {...style} width={32} height={32} name="plus-square-outline" />
-            )}
-          />
+
+              <Text style={{ margin: 5 }}>Later</Text>
+              <FlatList
+                data={this.state.listItems.filter((item) => item.list === 'later')}
+                renderItem={({ item }): ReactElement => this.renderItem(item)}
+                scrollEnabled={false}
+                numColumns={4}
+              />
+
+              <Text style={{ margin: 5 }}>Checked Off</Text>
+              <FlatList
+                data={this.state.listItems.filter((item) => item.list === 'checked')}
+                renderItem={({ item }): ReactElement => this.renderItem(item)}
+                scrollEnabled={false}
+                numColumns={4}
+              />
+            </Layout>
+            <AddProductModal />
+          </Provider>
         </ApplicationProvider>
       </>
     );
@@ -226,14 +198,6 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 20,
     color: '#FFFFFF',
-  },
-  addButtonStyle: {
-    width: 75,
-    height: 75,
-    borderRadius: 50,
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
   },
 });
 

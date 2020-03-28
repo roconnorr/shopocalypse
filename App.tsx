@@ -1,13 +1,6 @@
 import React, { ReactElement } from 'react';
-import { StyleSheet, FlatList, TouchableOpacity, ActionSheetIOS, ImageStyle } from 'react-native';
-import {
-  ApplicationProvider,
-  Button,
-  Icon,
-  IconRegistry,
-  Text,
-  Layout,
-} from '@ui-kitten/components';
+import { StyleSheet, FlatList, TouchableOpacity, ActionSheetIOS } from 'react-native';
+import { ApplicationProvider, IconRegistry, Text, Layout } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { mapping, dark as theme } from '@eva-design/eva';
 import { Provider } from 'react-redux';

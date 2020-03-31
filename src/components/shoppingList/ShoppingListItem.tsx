@@ -48,7 +48,6 @@ const ShoppingListItem = ({ item }: Props): ReactElement => {
           backgroundColor: `rgb(${Math.floor(Math.random() * 255)}, ${item.quantity * 5}, ${132})`,
         },
       ]}
-      key={item.name}
       onPress={(): void => moveItem(item, 'checked')}
       onLongPress={(): void => showItemActionSheet(item)}>
       <Text style={styles.itemText}>{item.name}</Text>

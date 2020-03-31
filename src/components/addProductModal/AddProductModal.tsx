@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import { ImageStyle, StyleSheet } from 'react-native';
+import { ImageStyle, ScrollView, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import { Button, Icon, Text, Layout, Input } from '@ui-kitten/components';
 
@@ -14,15 +14,17 @@ const AddProductModal = (): ReactElement => {
       <Layout>
         <Modal isVisible={isModalVisible} onBackdropPress={(): void => setModalVisible(false)}>
           <Layout style={{ flex: 0.5 }}>
-            <Text category="h2" style={{ margin: 5 }}>
-              Add Product
-            </Text>
-            <Input
-              placeholder="Item Name"
-              style={{ margin: 5 }}
-              value={newProductName}
-              onChangeText={(val): void => setNewProductName(val)}
-            />
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+              <Text category="h2" style={{ margin: 5 }}>
+                Add Product
+              </Text>
+              <Input
+                placeholder="Item Name"
+                style={{ margin: 5 }}
+                value={newProductName}
+                onChangeText={(val): void => setNewProductName(val)}
+              />
+            </ScrollView>
           </Layout>
           <Button
             onPress={(): void => {

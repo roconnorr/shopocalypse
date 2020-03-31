@@ -48,7 +48,9 @@ const ShoppingListItem = ({ item }: Props): ReactElement => {
           backgroundColor: `rgb(${Math.floor(Math.random() * 255)}, ${item.quantity * 5}, ${132})`,
         },
       ]}
-      onPress={(): void => moveItem(item, 'checked')}
+      onPress={(): void =>
+        item.list === 'checked' ? moveItem(item, 'now') : moveItem(item, 'checked')
+      }
       onLongPress={(): void => showItemActionSheet(item)}>
       <Text style={styles.itemText}>{item.name}</Text>
     </TouchableOpacity>

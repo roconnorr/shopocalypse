@@ -4,7 +4,8 @@ import { ApplicationProvider, IconRegistry, Layout } from '@ui-kitten/components
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { mapping, dark as theme } from '@eva-design/eva';
 import { Provider } from 'react-redux';
-import { store } from './src/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './src/store';
 
 import AddProductModal from './src/components/addProductModal/AddProductModal';
 import ShoppingList from './src/components/shoppingList/ShoppingList';
@@ -15,10 +16,12 @@ const App = (): ReactElement => {
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider mapping={mapping} theme={theme}>
         <Provider store={store}>
-          <Layout style={styles.appContainer}>
-            <ShoppingList />
-            <AddProductModal />
-          </Layout>
+          <PersistGate loading={null} persistor={persistor}>
+            <Layout style={styles.appContainer}>
+              <ShoppingList />
+              <AddProductModal />
+            </Layout>
+          </PersistGate>
         </Provider>
       </ApplicationProvider>
     </>

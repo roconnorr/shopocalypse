@@ -35,7 +35,7 @@ const AddProductModal = (): ReactElement => {
                   quantity: 1,
                 })
               );
-              console.log(store.getState());
+              setNewProductName('');
               setModalVisible(false);
             }}
             icon={(style: ImageStyle): ReactElement => (

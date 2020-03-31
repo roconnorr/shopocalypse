@@ -29,8 +29,8 @@ const AddProductModal = (): ReactElement => {
               store.dispatch(
                 addProduct({
                   list: 'now',
-                  name: 'test',
-                  quantity: 0,
+                  name: newProductName,
+                  quantity: 1,
                 })
               );
               console.log(store.getState());

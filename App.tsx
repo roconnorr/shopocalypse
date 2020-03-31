@@ -1,197 +1,32 @@
 import React, { ReactElement } from 'react';
-import { StyleSheet, FlatList, TouchableOpacity, ActionSheetIOS } from 'react-native';
-import { ApplicationProvider, IconRegistry, Text, Layout } from '@ui-kitten/components';
+import { StyleSheet } from 'react-native';
+import { ApplicationProvider, IconRegistry, Layout } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { mapping, dark as theme } from '@eva-design/eva';
 import { Provider } from 'react-redux';
 import { store } from './src/store';
 
 import AddProductModal from './src/components/addProductModal/AddProductModal';
+import ShoppingList from './src/components/shoppingList/ShoppingList';
 
-const SEED_DATA = {
-  now: ['Pizza', 'Burger', 'Risotto', 'Cheese Cake', 'Ice Cream'],
-  later: ['French Fries', 'Onion Rings', 'Fried Shrimps', 'Water', 'Coke', 'Beer'],
-  checkedOff: ['Cheese', 'Milk'],
-};
-
-type ItemLocationType = 'now' | 'later' | 'checked';
-
-type ListItemType = {
-  key: string;
-  name: string;
-  list: ItemLocationType;
-  backgroundColor: string;
-  disabledDrag?: boolean;
-  disabledReSorted?: boolean;
-};
-
-const nowData: ListItemType[] = SEED_DATA.now.map((item, index) => ({
-  name: item,
-  key: item,
-  list: 'now',
-  backgroundColor: `rgb(${Math.floor(Math.random() * 255)}, ${index * 5}, ${132})`,
-}));
-
-const laterData: ListItemType[] = SEED_DATA.later.map((item, index) => ({
-  name: item,
-  key: item,
-  list: 'later',
-  backgroundColor: `rgb(${Math.floor(Math.random() * 255)}, ${index * 5}, ${132})`,
-}));
-
-const checkedOffData: ListItemType[] = SEED_DATA.checkedOff.map((item, index) => ({
-  name: item,
-  key: item,
-  list: 'checked',
-  backgroundColor: `rgb(${Math.floor(Math.random() * 255)}, ${index * 5}, ${132})`,
-}));
-
-interface State {
-  listItems: ListItemType[];
-  modalVisible: boolean;
-  newProductName: string;
-}
-
-class App extends React.Component<{}, State> {
-  constructor(props: {}) {
-    super(props);
-    this.state = {
-      listItems: [...nowData, ...laterData, ...checkedOffData],
-      modalVisible: false,
-      newProductName: '',
-    };
-  }
-
-  addItem = (name: string): void => {
-    this.setState({
-      listItems: [
-        {
-          key: name,
-          name,
-          list: 'now',
-          backgroundColor: `rgb(${Math.floor(Math.random() * 255)}, ${5 * 5}, ${132})`,
-        },
-        ...this.state.listItems,
-      ],
-    });
-  };
-
-  moveItem = (item: ListItemType, destination: ItemLocationType): void => {
-    const listItems = this.state.listItems;
-    const itemIndex = this.state.listItems.findIndex((i) => i.name === item.name);
-    listItems.splice(itemIndex, 1);
-
-    this.setState({
-      listItems: [...listItems, { ...item, list: destination }],
-    });
-  };
-
-  onPressItem = (item: ListItemType): void => {
-    const opts = ['Cancel', 'Now', 'Later', 'Checked'];
-
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        options: opts,
-        cancelButtonIndex: 0,
-      },
-      (buttonIndex) => {
-        switch (buttonIndex) {
-          case 1: {
-            this.moveItem(item, 'now');
-            break;
-          }
-          case 2: {
-            this.moveItem(item, 'later');
-            break;
-          }
-          case 3: {
-            this.moveItem(item, 'checked');
-            break;
-          }
-        }
-      }
-    );
-  };
-
-  renderItem(item: ListItemType): ReactElement {
-    return (
-      <TouchableOpacity
-        style={[styles.item, { backgroundColor: item.backgroundColor }]}
-        key={item.key}
-        onPress={(): void => this.moveItem(item, 'checked')}
-        onLongPress={(): void => this.onPressItem(item)}>
-        <Text style={styles.itemText}>{item.name}</Text>
-      </TouchableOpacity>
-    );
-  }
-
-  render(): ReactElement {
-    return (
-      <>
-        <IconRegistry icons={EvaIconsPack} />
-        <ApplicationProvider mapping={mapping} theme={theme}>
-          <Provider store={store}>
-            <Layout
-              style={{
-                flex: 1,
-                paddingTop: 20,
-                paddingLeft: 5,
-                justifyContent: 'center',
-                alignItems: 'flex-start',
-              }}>
-              <Text style={{ margin: 5 }}>Now</Text>
-              <FlatList
-                data={this.state.listItems.filter((item) => item.list === 'now')}
-                renderItem={({ item }): ReactElement => this.renderItem(item)}
-                scrollEnabled={false}
-                numColumns={4}
-              />
-
-              <Text style={{ margin: 5 }}>Later</Text>
-              <FlatList
-                data={this.state.listItems.filter((item) => item.list === 'later')}
-                renderItem={({ item }): ReactElement => this.renderItem(item)}
-                scrollEnabled={false}
-                numColumns={4}
-              />
-
-              <Text style={{ margin: 5 }}>Checked Off</Text>
-              <FlatList
-                data={this.state.listItems.filter((item) => item.list === 'checked')}
-                renderItem={({ item }): ReactElement => this.renderItem(item)}
-                scrollEnabled={false}
-                numColumns={4}
-              />
-            </Layout>
+const App = (): ReactElement => {
+  return (
+    <>
+      <IconRegistry icons={EvaIconsPack} />
+      <ApplicationProvider mapping={mapping} theme={theme}>
+        <Provider store={store}>
+          <Layout style={styles.appContainer}>
+            <ShoppingList />
             <AddProductModal />
-          </Provider>
-        </ApplicationProvider>
-      </>
-    );
-  }
-}
+          </Layout>
+        </Provider>
+      </ApplicationProvider>
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
-  modalStyle: {
-    width: 300,
-    height: 300,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#00000080',
-    margin: 0,
-  },
-  item: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
-    margin: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  itemText: {
-    fontSize: 20,
-    color: '#FFFFFF',
-  },
+  appContainer: { flex: 1 },
 });
 
 export default App;

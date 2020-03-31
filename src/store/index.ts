@@ -1,33 +1,19 @@
-import { createSlice, configureStore } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+
+import { productsSlice } from './products';
+
 import { INITIAL_STATE } from './state';
-import { ProductItem } from '../../global';
 
-const productSlice = createSlice({
-  name: 'product',
-  initialState: INITIAL_STATE,
-  reducers: {
-    add: (state, action): ProductItem[] => {
-      console.log(state);
-      console.log(action);
-      return [...state, { id: 'test-id', list: 'now', title: action.payload }];
-    },
-    remove: (state, action): ProductItem[] => {
-      return state.map((item) => {
-        if (item.id !== action.payload.id) {
-          return item;
-        }
+const rootReducer = combineReducers({ products: productsSlice.reducer });
 
-        return {
-          ...item,
-          added: false,
-        };
-      });
-    },
-  },
+const store = configureStore({
+  reducer: rootReducer,
 });
 
-const store = configureStore({ reducer: productSlice.reducer });
+// insert test data
+INITIAL_STATE.forEach((p) => store.dispatch(productsSlice.actions.addProduct(p)));
 
-export const { add, remove } = productSlice.actions;
+export type RootState = ReturnType<typeof rootReducer>;
+export type AppDispatch = typeof store.dispatch;
 
-export { productSlice, store };
+export { store };

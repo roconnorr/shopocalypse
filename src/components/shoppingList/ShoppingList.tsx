@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { FlatList } from 'react-native';
-import { Text, Layout } from '@ui-kitten/components';
+import { Layout, Text } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
 
 import { selectAll } from '../../store/products';

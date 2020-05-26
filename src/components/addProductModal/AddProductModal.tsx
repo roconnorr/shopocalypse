@@ -13,20 +13,31 @@ const AddProductModal = (): ReactElement => {
     <>
       <Layout>
         <Modal isVisible={isModalVisible} onBackdropPress={(): void => setModalVisible(false)}>
-          <Layout style={{ flex: 0.5 }}>
+          <Layout
+            style={{
+              flex: 0.5,
+              alignItems: 'stretch',
+              flexDirection: 'column',
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 10,
+            }}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
-              <Text category="h2" style={{ margin: 5 }}>
+              <Text category="h2" style={{ marginTop: 10, marginBottom: 5, marginLeft: 5 }}>
                 Add Product
               </Text>
               <Input
                 placeholder="Item Name"
-                style={{ margin: 5 }}
+                style={{ marginLeft: 5, marginRight: 5 }}
                 value={newProductName}
                 onChangeText={(val): void => setNewProductName(val)}
               />
             </ScrollView>
           </Layout>
           <Button
+            style={{
+              borderTopLeftRadius: 0,
+              borderTopRightRadius: 0,
+            }}
             onPress={(): void => {
               store.dispatch(
                 addProduct({

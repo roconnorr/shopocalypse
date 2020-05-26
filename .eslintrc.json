@@ -1,10 +1,10 @@
 {
   "extends": [
     "eslint:recommended",
-    "expo",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier/@typescript-eslint",
+    "expo",
     "plugin:prettier/recommended"
   ],
   "plugins": ["react", "@typescript-eslint", "prettier"],
@@ -21,6 +21,11 @@
     "react": {
       "pragma": "React",
       "version": "detect"
+    }
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
     }
   },
   "globals": { "__DEV__": true },

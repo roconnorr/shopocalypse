@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet } from 'react-native';
-import { ApplicationProvider, IconRegistry, Layout } from '@ui-kitten/components';
+import { ApplicationProvider, IconRegistry, Layout, Text } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { mapping, dark as theme } from '@eva-design/eva';
 import { Provider } from 'react-redux';
@@ -18,6 +18,9 @@ const App = (): ReactElement => {
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <Layout style={styles.appContainer}>
+              <Text category={'h3'} style={{ alignSelf: 'center', marginTop: 20 }}>
+                Sh☣️p☣️calypse
+              </Text>
               <ShoppingList />
               <AddProductModal />
             </Layout>

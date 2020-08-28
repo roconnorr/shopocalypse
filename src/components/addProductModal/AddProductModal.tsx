@@ -1,14 +1,17 @@
 import React, { ReactElement, useState } from 'react';
 import { ImageStyle, ScrollView, StyleSheet } from 'react-native';
+import { useDispatch } from 'react-redux';
 import Modal from 'react-native-modal';
 import { Button, Icon, Text, Layout, Input } from '@ui-kitten/components';
 
-import { store } from '../../store';
+import { AppDispatch } from '../../store';
 import { addProduct } from '../../store/products';
 
 const AddProductModal = (): ReactElement => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [newProductName, setNewProductName] = useState('');
+  const dispatch = useDispatch<AppDispatch>();
+
   return (
     <>
       <Layout>
@@ -39,7 +42,7 @@ const AddProductModal = (): ReactElement => {
               borderTopRightRadius: 0,
             }}
             onPress={(): void => {
-              store.dispatch(
+              dispatch(
                 addProduct({
                   list: 'now',
                   name: newProductName,

@@ -5,7 +5,7 @@ const SEED_DATA = {
 };
 
 const nowData: ProductType[] = SEED_DATA.now.map((item, index) => ({
-  id: `testnow-${index}`,
+  // id: `testnow-${index}`,
   name: item,
   list: 'now',
   quantity: 1,
@@ -13,7 +13,7 @@ const nowData: ProductType[] = SEED_DATA.now.map((item, index) => ({
 }));
 
 const laterData: ProductType[] = SEED_DATA.later.map((item, index) => ({
-  id: `testlater-${index}`,
+  // id: `testlater-${index}`,
   name: item,
   list: 'later',
   quantity: 2,
@@ -21,7 +21,7 @@ const laterData: ProductType[] = SEED_DATA.later.map((item, index) => ({
 }));
 
 const checkedOffData: ProductType[] = SEED_DATA.checkedOff.map((item, index) => ({
-  id: `testchecked-${index}`,
+  // id: `testchecked-${index}`,
   name: item,
   list: 'checked',
   quantity: 1,

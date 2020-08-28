@@ -1,9 +1,11 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { FlatList } from 'react-native';
 import { Layout, Text } from '@ui-kitten/components';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { selectAll } from '../../store/products';
+import { AppDispatch } from '../../store';
+import { INITIAL_STATE } from '../../store/state';
+import { selectAll, addProduct } from '../../store/products';
 
 import ShoppingListItem from './ShoppingListItem';
 
@@ -13,6 +15,11 @@ const keyExtractor = (item: ProductType): string => item.name;
 
 const ShoppingList = (): ReactElement => {
   const products = useSelector(selectAll);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    INITIAL_STATE.forEach((p) => dispatch(addProduct(p)));
+  }, []);
 
   return (
     <Layout

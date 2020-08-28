@@ -26,9 +26,6 @@ const store = configureStore({
 
 const persistor = persistStore(store);
 
-// insert test data
-// INITIAL_STATE.forEach((p) => store.dispatch(productsSlice.actions.addProduct(p)));
-
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 

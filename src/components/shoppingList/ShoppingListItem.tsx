@@ -41,6 +41,24 @@ const showItemActionSheet = (item: ProductType, dispatch: AppDispatch): void => 
   );
 };
 
+const randInterval = (min, max) => {
+  // min and max included
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+const generateColour = (item: ProductType): string => {
+  const saturation = randInterval(70, 100);
+  const lightness = randInterval(45, 50);
+
+  if (item.list === 'now') {
+    return `hsl(${randInterval(0, 10)}, ${saturation}%, ${lightness}%)`;
+  } else if (item.list === 'later') {
+    return `hsl(${randInterval(20, 30)}, ${saturation}%, ${lightness}%)`;
+  } else {
+    return `hsl(${randInterval(140, 150)}, ${saturation}%, ${lightness}%)`;
+  }
+};
+
 type Props = {
   item: ProductType;
 };
@@ -53,7 +71,7 @@ const ShoppingListItem = ({ item }: Props): ReactElement => {
       style={[
         styles.item,
         {
-          backgroundColor: `rgb(${Math.floor(Math.random() * 255)}, ${item.quantity * 5}, ${132})`,
+          backgroundColor: generateColour(item),
         },
       ]}
       onPress={(): void =>

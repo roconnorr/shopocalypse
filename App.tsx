@@ -18,7 +18,7 @@ const App = (): ReactElement => {
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <Layout style={styles.appContainer}>
-              <Text category={'h3'} style={{ alignSelf: 'center', marginTop: 20 }}>
+              <Text category={'h3'} style={styles.title}>
                 Sh☣️p☣️calypse
               </Text>
               <ShoppingList />
@@ -32,7 +32,13 @@ const App = (): ReactElement => {
 };
 
 const styles = StyleSheet.create({
-  appContainer: { flex: 1 },
+  appContainer: {
+    flex: 1,
+  },
+  title: {
+    alignSelf: 'center',
+    marginTop: 20,
+  },
 });
 
 export default App;

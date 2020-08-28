@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 import { Layout, Text } from '@ui-kitten/components';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -22,15 +22,8 @@ const ShoppingList = (): ReactElement => {
   }, []);
 
   return (
-    <Layout
-      style={{
-        flex: 1,
-        paddingTop: 20,
-        paddingLeft: 5,
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-      }}>
-      <Text style={{ margin: 5 }}>Now</Text>
+    <Layout style={styles.listContainer}>
+      <Text style={styles.listHeaderText}>Now</Text>
       <FlatList
         data={products.filter((item) => item.list === 'now')}
         renderItem={({ item }): ReactElement => renderItem(item)}
@@ -39,7 +32,7 @@ const ShoppingList = (): ReactElement => {
         numColumns={4}
       />
 
-      <Text style={{ margin: 5 }}>Later</Text>
+      <Text style={styles.listHeaderText}>Later</Text>
       <FlatList
         data={products.filter((item) => item.list === 'later')}
         renderItem={({ item }): ReactElement => renderItem(item)}
@@ -48,7 +41,7 @@ const ShoppingList = (): ReactElement => {
         numColumns={4}
       />
 
-      <Text style={{ margin: 5 }}>Checked Off</Text>
+      <Text style={styles.listHeaderText}>Checked Off</Text>
       <FlatList
         data={products.filter((item) => item.list === 'checked')}
         renderItem={({ item }): ReactElement => renderItem(item)}
@@ -59,5 +52,18 @@ const ShoppingList = (): ReactElement => {
     </Layout>
   );
 };
+
+const styles = StyleSheet.create({
+  listContainer: {
+    flex: 1,
+    paddingTop: 20,
+    paddingLeft: 5,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
+  listHeaderText: {
+    margin: 5,
+  },
+});
 
 export default ShoppingList;

@@ -16,31 +16,23 @@ const AddProductModal = (): ReactElement => {
     <>
       <Layout>
         <Modal isVisible={isModalVisible} onBackdropPress={(): void => setModalVisible(false)}>
-          <Layout
-            style={{
-              flex: 0.5,
-              alignItems: 'stretch',
-              flexDirection: 'column',
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-            }}>
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
-              <Text category="h2" style={{ marginTop: 10, marginBottom: 5, marginLeft: 5 }}>
+          <Layout style={styles.modalContainer}>
+            <ScrollView
+              contentContainerStyle={styles.modalScrollView}
+              keyboardShouldPersistTaps="handled">
+              <Text category="h2" style={styles.modalHeader}>
                 Add Product
               </Text>
               <Input
                 placeholder="Item Name"
-                style={{ marginLeft: 5, marginRight: 5 }}
+                style={styles.productNameInput}
                 value={newProductName}
                 onChangeText={(val): void => setNewProductName(val)}
               />
             </ScrollView>
           </Layout>
           <Button
-            style={{
-              borderTopLeftRadius: 0,
-              borderTopRightRadius: 0,
-            }}
+            style={styles.addProductButton}
             onPress={(): void => {
               dispatch(
                 addProduct({
@@ -77,6 +69,29 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
+  },
+  modalContainer: {
+    flex: 0.5,
+    alignItems: 'stretch',
+    flexDirection: 'column',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  modalScrollView: {
+    flexGrow: 1,
+  },
+  modalHeader: {
+    marginTop: 10,
+    marginBottom: 5,
+    marginLeft: 5,
+  },
+  productNameInput: {
+    marginLeft: 5,
+    marginRight: 5,
+  },
+  addProductButton: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
   },
 });
 

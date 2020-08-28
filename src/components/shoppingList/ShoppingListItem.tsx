@@ -1,33 +1,39 @@
 import React, { ReactElement } from 'react';
 import { ActionSheetIOS, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { useDispatch } from 'react-redux';
 
-import { store } from '../../store';
-import { updateProduct } from '../../store/products';
+import { AppDispatch } from '../../store';
+import { updateProduct, removeProduct } from '../../store/products';
 
-const moveItem = (item: ProductType, list: ProductLocationType): void => {
-  store.dispatch(updateProduct({ id: item.name, changes: { list } }));
+const moveItem = (item: ProductType, list: ProductLocationType, dispatch: AppDispatch): void => {
+  dispatch(updateProduct({ id: item.name, changes: { list } }));
 };
 
-const showItemActionSheet = (item: ProductType): void => {
-  const opts = ['Cancel', 'Now', 'Later', 'Checked'];
+const showItemActionSheet = (item: ProductType, dispatch: AppDispatch): void => {
+  const opts = ['Cancel', 'Now', 'Later', 'Checked', 'Delete'];
 
   ActionSheetIOS.showActionSheetWithOptions(
     {
       options: opts,
       cancelButtonIndex: 0,
+      destructiveButtonIndex: 4,
     },
     (buttonIndex) => {
       switch (buttonIndex) {
         case 1: {
-          moveItem(item, 'now');
+          moveItem(item, 'now', dispatch);
           break;
         }
         case 2: {
-          moveItem(item, 'later');
+          moveItem(item, 'later', dispatch);
           break;
         }
         case 3: {
-          moveItem(item, 'checked');
+          moveItem(item, 'checked', dispatch);
+          break;
+        }
+        case 4: {
+          dispatch(removeProduct(item.name));
           break;
         }
       }
@@ -40,6 +46,8 @@ type Props = {
 };
 
 const ShoppingListItem = ({ item }: Props): ReactElement => {
+  const dispatch = useDispatch<AppDispatch>();
+
   return (
     <TouchableOpacity
       style={[
@@ -49,9 +57,11 @@ const ShoppingListItem = ({ item }: Props): ReactElement => {
         },
       ]}
       onPress={(): void =>
-        item.list === 'checked' ? moveItem(item, 'now') : moveItem(item, 'checked')
+        item.list === 'checked'
+          ? moveItem(item, 'now', dispatch)
+          : moveItem(item, 'checked', dispatch)
       }
-      onLongPress={(): void => showItemActionSheet(item)}>
+      onLongPress={(): void => showItemActionSheet(item, dispatch)}>
       <Text style={styles.itemText}>{item.name}</Text>
     </TouchableOpacity>
   );

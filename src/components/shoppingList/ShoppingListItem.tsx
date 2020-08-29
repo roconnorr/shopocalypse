@@ -62,7 +62,9 @@ const ShoppingListItem = ({ item }: Props): ReactElement => {
           : moveItem(item, 'checked', dispatch)
       }
       onLongPress={(): void => showItemActionSheet(item, dispatch)}>
-      <Text style={styles.itemText}>{item.name}</Text>
+      <Text style={styles.itemText} numberOfLines={2}>
+        {item.name}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -79,6 +81,7 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 20,
     color: '#FFFFFF',
+    margin: 5,
   },
 });
 

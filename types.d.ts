@@ -4,4 +4,5 @@ type ProductType = {
   name: string;
   list: ProductLocationType;
   quantity: number;
+  colour?: string;
 };

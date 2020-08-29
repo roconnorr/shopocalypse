@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { Layout, Text } from '@ui-kitten/components';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -9,45 +9,52 @@ import { selectAll, addProduct } from '../../store/products';
 
 import ShoppingListItem from './ShoppingListItem';
 
-const renderItem = (item: ProductType): ReactElement => <ShoppingListItem item={item} />;
+const renderItem = ({ item }: { item: ProductType }): ReactElement => (
+  <ShoppingListItem item={item} />
+);
 
 const keyExtractor = (item: ProductType): string => item.name;
 
+const ListSection = ({
+  productData,
+  listName,
+}: {
+  productData: ProductType[];
+  listName: ProductLocationType;
+}): ReactElement => {
+  return (
+    <>
+      <Text style={styles.listHeaderText}>{listName}</Text>
+      <FlatList
+        data={productData}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        scrollEnabled={false}
+        numColumns={4}
+      />
+    </>
+  );
+};
+
 const ShoppingList = (): ReactElement => {
   const products = useSelector(selectAll);
-  const dispatch = useDispatch<AppDispatch>();
+  // for dev: seeds products
+  // const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => {
-    INITIAL_STATE.forEach((p) => dispatch(addProduct(p)));
-  }, []);
+  // useEffect(() => {
+  //   INITIAL_STATE.forEach((p) => dispatch(addProduct(p)));
+  // }, []);
 
   return (
     <Layout style={styles.listContainer}>
-      <Text style={styles.listHeaderText}>Now</Text>
       <FlatList
-        data={products.filter((item) => item.list === 'now')}
-        renderItem={({ item }): ReactElement => renderItem(item)}
-        keyExtractor={keyExtractor}
-        scrollEnabled={false}
-        numColumns={4}
-      />
-
-      <Text style={styles.listHeaderText}>Later</Text>
-      <FlatList
-        data={products.filter((item) => item.list === 'later')}
-        renderItem={({ item }): ReactElement => renderItem(item)}
-        keyExtractor={keyExtractor}
-        scrollEnabled={false}
-        numColumns={4}
-      />
-
-      <Text style={styles.listHeaderText}>Checked Off</Text>
-      <FlatList
-        data={products.filter((item) => item.list === 'checked')}
-        renderItem={({ item }): ReactElement => renderItem(item)}
-        keyExtractor={keyExtractor}
-        scrollEnabled={false}
-        numColumns={4}
+        data={['now', 'later', 'checked']}
+        keyExtractor={(item): string => item}
+        renderItem={({ item }: { item: ProductLocationType }): ReactElement => {
+          return (
+            <ListSection productData={products.filter((p) => p.list === item)} listName={item} />
+          );
+        }}
       />
     </Layout>
   );
